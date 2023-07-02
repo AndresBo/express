@@ -7,6 +7,7 @@ app.use(express.json())
 app.use(express.static('build'))
 
 // mongoose config:
+const password = process.argv[2]
 const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/noteApp?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery', false)
@@ -16,6 +17,7 @@ const noteSchema = new mongoose.Schema({
   content: String,
   important: Boolean,
 })
+//
 
 const Note = mongoose.model('Note', noteSchema)
 
@@ -52,7 +54,9 @@ app.get('/', (request, response) => {
 
 // get all notes
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 // get individual note
