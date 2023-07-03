@@ -77,15 +77,9 @@ app.get('/api/notes', (request, response) => {
 
 // get individual note
 app.get('/api/notes/:id', (request, response) => {
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id)
-
-  if (note) {
+  Note.findById(request.params.id).then(note => {
     response.json(note)
-  } else {
-    response.statusMessage = "custom error message"
-    response.status(400).end()
-  }
+  })
 })
 
 
@@ -103,12 +97,12 @@ app.post('/api/notes', (request, response) => {
   if (body.content === undefined) {
     return response.status(400).json({error: 'content missing'})
   }
-
+  // use Note constructor function:
   const note = new Note ({
     content: body.content,
     important: body.important || false,
   })
-
+  // save note and the savedNote is the newly created note
   note.save().then(savedNote => {
     response.json(savedNote)
   })
