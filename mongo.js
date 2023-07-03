@@ -1,3 +1,5 @@
+// use this for trying and testing during development
+
 const mongoose = require('mongoose')
 
 if (process.argv.length<3) {

@@ -23,29 +23,6 @@ app.use(express.static('build'))
 app.use(requestLogger)
 
 
-// mongoose config:
-// const password = process.argv[2]
-// const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/noteApp?retryWrites=true&w=majority`
-
-// mongoose.set('strictQuery', false)
-// mongoose.connect(url)
-
-// const noteSchema = new mongoose.Schema({
-//   content: String,
-//   important: Boolean,
-// })
-// // transform _id to a string and deletes _id and _v mongo versioning field
-// noteSchema.set('toJSON', {
-//   transform: (document, returnedObject) => {
-//     returnedObject.id = returnedObject._id.toString()
-//     delete returnedObject._id
-//     delete returnedObject.__v
-//   }
-// })
-
-//const Note = mongoose.model('Note', noteSchema)
-
-
 let notes = [
     {
       id: 1,
@@ -86,9 +63,18 @@ app.get('/api/notes', (request, response) => {
 
 // get individual note
 app.get('/api/notes/:id', (request, response) => {
-  Note.findById(request.params.id).then(note => {
-    response.json(note)
-  })
+  Note.findById(request.params.id)
+    .then(note => {
+      if(note) {
+        response.json(note)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+      response.status(400).send({ error: 'malformatted id' })
+    })
 })
 
 
