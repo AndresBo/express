@@ -16,10 +16,10 @@ const requestLogger = (request, response, next) => {
   console.log('---')
   next()
 }
-
+// remember ORDER matters for middleware functions as execution is the same order as the loading
 app.use(cors())
-app.use(express.json())
 app.use(express.static('build'))
+app.use(express.json())
 app.use(requestLogger)
 
 
@@ -61,8 +61,10 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-// get individual note
-app.get('/api/notes/:id', (request, response) => {
+// get individual note. now the error is passed forward with next function as a parameter.
+// if next is called WITHOUT a parameter, it goes to the next middleware or route.
+// if next is called WITH a parameter, the execution continues to the error handler middleware
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id)
     .then(note => {
       if(note) {
@@ -71,10 +73,7 @@ app.get('/api/notes/:id', (request, response) => {
         response.status(404).end()
       }
     })
-    .catch(error => {
-      console.log(error)
-      response.status(400).send({ error: 'malformatted id' })
-    })
+    .catch(error => next(error))
 })
 
 
@@ -102,6 +101,20 @@ app.post('/api/notes', (request, response) => {
     response.json(savedNote)
   })
 })
+
+// express error handler that accepts four parameters:
+// 'errorHandler' is a catch-all error handler function
+ const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError'){
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  next(error)
+}
+
+// THIS has to be the LAST loaded middleware
+app.use(errorHandler)
 
 
 const PORT = process.env.PORT 
