@@ -49,10 +49,12 @@ const generateId = () => {
   return maxId + 1 
 }
 
+
 // hello message
 app.get('/', (request, response) => {
   response.send('<h1>Hello from express note backend</h1>')
 })
+
 
 // get all notes from db
 app.get('/api/notes', (request, response) => {
@@ -60,6 +62,7 @@ app.get('/api/notes', (request, response) => {
     response.json(notes)
   })
 })
+
 
 // get individual note. now the error is passed forward with next function as a parameter.
 // if next is called WITHOUT a parameter, it goes to the next middleware or route.
@@ -75,6 +78,7 @@ app.get('/api/notes/:id', (request, response, next) => {
     })
     .catch(error => next(error))
 })
+
 
 // deleting a note that exists and one that does not exists, results in same response 204.
 // any exceptions is passed to errorHandler
@@ -104,6 +108,27 @@ app.post('/api/notes', (request, response) => {
   })
 })
 
+
+// toggling importance of a note:
+app.put('/api/notes/:id', (request, response, next) => {
+  const body = request.body
+  // note the regular js object 'note' used by 'findIdAndUpdate' as a parameter. 
+  // it does not get a new note object created with the Note constructor.
+  const note = {
+    content: body.content,
+    important: body.important,
+  }
+  // findByIdAndUpdate gets the original document by default without modification.
+  // The optional { new: true } parameter causes the event handler to be called with the 
+  // new modified document and not the original.
+  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then(updatedNote => {
+      response.json(updatedNote)
+    })
+    .catch(error => next(error))
+})
+
+
 // express error handler that accepts four parameters:
 // 'errorHandler' is a catch-all error handler function
  const errorHandler = (error, request, response, next) => {
@@ -115,7 +140,7 @@ app.post('/api/notes', (request, response) => {
   next(error)
 }
 
-// THIS has to be the LAST loaded middleware
+// this HAS to be the LAST loaded middleware
 app.use(errorHandler)
 
 
