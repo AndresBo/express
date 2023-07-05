@@ -91,21 +91,19 @@ app.delete('/api/notes/:id', (request, response, next) => {
 })
 
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
-
-  if (body.content === undefined) {
-    return response.status(400).json({error: 'content missing'})
-  }
   // use Note constructor function:
   const note = new Note ({
     content: body.content,
     important: body.important || false,
   })
   // save note and the savedNote is the newly created note
-  note.save().then(savedNote => {
-    response.json(savedNote)
-  })
+  note.save()
+    .then(savedNote => {
+      response.json(savedNote)
+    })
+    .catch(error => next(error))
 })
 
 
@@ -134,8 +132,10 @@ app.put('/api/notes/:id', (request, response, next) => {
  const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
-  if (error.name === 'CastError'){
+  if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error:error.message })
   }
   next(error)
 }
