@@ -109,17 +109,16 @@ app.post('/api/notes', (request, response, next) => {
 
 // toggling importance of a note:
 app.put('/api/notes/:id', (request, response, next) => {
-  const body = request.body
-  // note the regular js object 'note' used by 'findIdAndUpdate' as a parameter. 
-  // it does not get a new note object created with the Note constructor.
-  const note = {
-    content: body.content,
-    important: body.important,
-  }
+  const { content, important } = request.body
+  
   // findByIdAndUpdate gets the original document by default without modification.
   // The optional { new: true } parameter causes the event handler to be called with the 
   // new modified document and not the original.
-  Note.findByIdAndUpdate(request.params.id, note, { new: true })
+  Note.findByIdAndUpdate(
+    request.params.id, 
+    { content, important }, 
+    { new: true, runValidators: true, context: 'query' }
+  )
     .then(updatedNote => {
       response.json(updatedNote)
     })
