@@ -5,8 +5,6 @@ const app = express()
 
 const cors = require('cors')
 
-const mongoose = require('mongoose')
-
 const Note = require('./models/note')
 
 const requestLogger = (request, response, next) => {
@@ -23,31 +21,31 @@ app.use(express.json())
 app.use(requestLogger)
 
 
-let notes = [
-    {
-      id: 1,
-      content: "HTML is easy",
-      important: true
-    },
-    {
-      id: 2,
-      content: "Browser can execute only JavaScript",
-      important: false
-    },
-    {
-      id: 3,
-      content: "GET and POST are the most important methods of HTTP protocol",
-      important: true
-    }
-]
+// let notes = [
+//     {
+//       id: 1,
+//       content: "HTML is easy",
+//       important: true
+//     },
+//     {
+//       id: 2,
+//       content: "Browser can execute only JavaScript",
+//       important: false
+//     },
+//     {
+//       id: 3,
+//       content: "GET and POST are the most important methods of HTTP protocol",
+//       important: true
+//     }
+// ]
 
 
-const generateId = () => {
-  const maxId = notes.length > 0 
-    ? Math.max(...notes.map(n => n.id))
-    : 0
-  return maxId + 1 
-}
+// const generateId = () => {
+//   const maxId = notes.length > 0 
+//     ? Math.max(...notes.map(n => n.id))
+//     : 0
+//   return maxId + 1 
+// }
 
 
 // hello message
@@ -128,7 +126,7 @@ app.put('/api/notes/:id', (request, response, next) => {
 
 // express error handler that accepts four parameters:
 // 'errorHandler' is a catch-all error handler function
- const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {

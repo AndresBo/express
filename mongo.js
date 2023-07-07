@@ -6,11 +6,11 @@ if (process.argv.length<3) {
     console.log('give password as argument')
     process.exit(1)
 }
-// take password from third argument in command line    
+// take password from third argument in command line
 const password = process.argv[2]
 
 const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/noteApp?retryWrites=true&w=majority`
-  
+
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
