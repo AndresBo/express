@@ -44,7 +44,7 @@ app.use(requestLogger)
 //   const maxId = notes.length > 0 
 //     ? Math.max(...notes.map(n => n.id))
 //     : 0
-//   return maxId + 1 
+//   return maxId + 1
 // }
 
 
@@ -108,13 +108,12 @@ app.post('/api/notes', (request, response, next) => {
 // toggling importance of a note:
 app.put('/api/notes/:id', (request, response, next) => {
   const { content, important } = request.body
-  
   // findByIdAndUpdate gets the original document by default without modification.
   // The optional { new: true } parameter causes the event handler to be called with the 
   // new modified document and not the original.
   Note.findByIdAndUpdate(
-    request.params.id, 
-    { content, important }, 
+    request.params.id,
+    { content, important },
     { new: true, runValidators: true, context: 'query' }
   )
     .then(updatedNote => {
@@ -141,7 +140,7 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 
-const PORT = process.env.PORT 
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
