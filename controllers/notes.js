@@ -46,7 +46,7 @@ notesRouter.post('/', (request, response, next) => {
   // save note and the savedNote is the newly created note
   note.save()
     .then(savedNote => {
-      response.json(savedNote)
+      response.status(201).json(savedNote)
     })
     .catch(error => next(error))
 })

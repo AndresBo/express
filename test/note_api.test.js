@@ -48,6 +48,28 @@ test('a specific note is within the returned notes', async () => {
   )
 })
 
+test('a valid note can be added', async () => {
+  const newNote = {
+    content: 'async/await simplifies making async calls',
+    important: true,
+  }
+
+  await api
+    .post('/api/notes')
+    .send(newNote)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  const response = await api.get('/api/notes')
+
+  const contents = response.body.map(r => r.content)
+
+  expect(response.body).toHaveLength(initialNotes.length + 1)
+  expect(contents).toContain('async/await simplifies making async calls')
+})
+
+
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
