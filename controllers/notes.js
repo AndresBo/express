@@ -2,11 +2,16 @@ const notesRouter = require('express').Router()
 const Note = require('../models/note')
 
 
-notesRouter.get('/', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
+notesRouter.get('/', async (request, response) => {
+  const notes = await Note.find({})
+  response.json(notes)
 })
+// promise alternative:
+// notesRouter.get('/', (request, response) => {
+//   Note.find({}).then(notes => {
+//     response.json(notes)
+//   })
+// })
 
 // get individual note. now the error is passed forward with next function as a parameter.
 // if next is called WITHOUT a parameter, it goes to the next middleware or route.
