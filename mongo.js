@@ -8,9 +8,10 @@ if (process.argv.length<3) {
 }
 // take password from third argument in command line
 const password = process.argv[2]
-
-const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/noteApp?retryWrites=true&w=majority`
-
+// production db:
+//const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/noteApp?retryWrites=true&w=majority`
+// test db:
+const url = `mongodb+srv://andresb:${password}@cluster0.1isxvxb.mongodb.net/testNoteApp?retryWrites=true&w=majority`
 
 mongoose.set('strictQuery',false)
 mongoose.connect(url)
@@ -30,15 +31,15 @@ const note = new Note({
 })
 
 // // save and close to finish executing
-// note.save().then(result => {
-//   console.log('note saved!', result)
-//   mongoose.connection.close()
-// })
-
-// to retrieve data, use 'find' method of the Note model:
-Note.find({}).then(result => {
-  result.forEach(note => {
-    console.log(note)
-  })
+note.save().then(result => {
+  console.log('note saved!', result)
   mongoose.connection.close()
 })
+
+// to retrieve data, use 'find' method of the Note model:
+// Note.find({}).then(result => {
+//   result.forEach(note => {
+//     console.log(note)
+//   })
+//   mongoose.connection.close()
+// })
