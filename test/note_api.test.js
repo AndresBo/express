@@ -18,6 +18,7 @@ beforeEach(async () => {
   await noteObject.save()
 })
 
+
 test('notes are returned as json', async () => {
   await api
     .get('/api/notes')
@@ -73,8 +74,6 @@ test('a note without content is not added', async () => {
 
   expect(notesAtEnd).toHaveLength(helper.initialNotes.length)
 })
-
-
 
 
 afterAll(async () => {

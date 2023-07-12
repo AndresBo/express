@@ -36,7 +36,7 @@ notesRouter.delete('/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-notesRouter.post('/', (request, response, next) => {
+notesRouter.post('/', async (request, response, next) => {
   const body = request.body
   // use Note constructor function:
   const note = new Note ({
@@ -44,11 +44,16 @@ notesRouter.post('/', (request, response, next) => {
     important: body.important || false,
   })
   // save note and the savedNote is the newly created note
-  note.save()
-    .then(savedNote => {
-      response.status(201).json(savedNote)
-    })
-    .catch(error => next(error))
+  // using promises (delete async):
+  // note.save()
+  //   .then(savedNote => {
+  //     response.status(201).json(savedNote)
+  //   })
+  //   .catch(error => next(error))
+
+  // using async/await
+  const savedNote = await note.save()
+  response.status(201).json(savedNote)
 })
 
 notesRouter.put('/:id', (request, response, next) => {
