@@ -14,9 +14,9 @@
     "nodemon": "^2.0.22"
   },
   "scripts": {
-    "start": "node index.js",
-    "dev": "nodemon index.js",
-    "test": "jest --verbose",
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest --verbose --runInBand",
     "lint": "eslint ."
   },
   "author": "",
