@@ -17,5 +17,3 @@ test('reverse of releveler', () => {
 
   expect(result).toBe('releveler')
 })
-
-
