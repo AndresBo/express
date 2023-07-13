@@ -6,7 +6,7 @@ notesRouter.get('/', async (request, response) => {
   const notes = await Note.find({})
   response.json(notes)
 })
-// promise alternative:
+// promise alternative for GET:
 // notesRouter.get('/', (request, response) => {
 //   Note.find({}).then(notes => {
 //     response.json(notes)
@@ -52,8 +52,12 @@ notesRouter.post('/', async (request, response, next) => {
   //   .catch(error => next(error))
 
   // using async/await
-  const savedNote = await note.save()
-  response.status(201).json(savedNote)
+  try {
+    const savedNote = await note.save()
+    response.status(201).json(savedNote)
+  } catch(exception) {
+    next(exception)
+  }
 })
 
 notesRouter.put('/:id', (request, response, next) => {
