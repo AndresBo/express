@@ -16,17 +16,30 @@ notesRouter.get('/', async (request, response) => {
 // get individual note. now the error is passed forward with next function as a parameter.
 // if next is called WITHOUT a parameter, it goes to the next middleware or route.
 // if next is called WITH a parameter, the execution continues to the error handler middleware
-notesRouter.get('/:id', (request, response, next) => {
-  Note.findById(request.params.id)
-    .then(note => {
-      if(note) {
-        response.json(note)
-      } else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => next(error))
+notesRouter.get('/:id', async (request, response, next) => {
+  try {
+    const note = await Note.findById(request.params.id)
+    if(note) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
+  } catch(exception) {
+    next(exception)
+  }
 })
+// using promises alternative for get a note:
+// notesRouter.get('/:id', (request, response, next) => {
+//   Note.findById(request.params.id)
+//     .then(note => {
+//       if(note) {
+//         response.json(note)
+//       } else {
+//         response.status(404).end()
+//       }
+//     })
+//     .catch(error => next(error))
+// })
 
 notesRouter.delete('/:id', (request, response, next) => {
   Note.findByIdAndRemove(request.params.id)
