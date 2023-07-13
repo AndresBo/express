@@ -11,11 +11,25 @@ const Note = require('../models/note')
 beforeEach(async () => {
   await Note.deleteMany({})
 
-  let noteObject = new Note(helper.initialNotes[0])
-  await noteObject.save()
+  // save one by one:
+  // let noteObject = new Note(helper.initialNotes[0])
+  // await noteObject.save()
 
-  noteObject = new Note(helper.initialNotes[1])
-  await noteObject.save()
+  // // or with a Promise.all:
+  // // noteObjects is an array of mongoose objects created with Note constructor
+  // const noteObjects = helper.initialNotes.map(note => new Note(note))
+  // // promiseArray is an array of promises for saving each item to database
+  // const promiseArray = noteObjects.map(note => note.save())
+  // // Promise.all transforms array of promises into a single promise that is only fullfilled once every promise
+  // // in array passed to it is resolved.
+  // await Promise.all(promiseArray)
+
+  // another option using a for of loop:
+  for (let note of helper.initialNotes) {
+    let noteObject = new Note(note)
+    await noteObject.save()
+  }
+
 })
 
 
