@@ -41,13 +41,22 @@ notesRouter.get('/:id', async (request, response, next) => {
 //     .catch(error => next(error))
 // })
 
-notesRouter.delete('/:id', (request, response, next) => {
-  Note.findByIdAndRemove(request.params.id)
-    .then( () => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+notesRouter.delete('/:id', async (request, response, next) => {
+  try {
+    await Note.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } catch(exception) {
+    next(exception)
+  }
 })
+// using promises alternative for DELETE method
+// notesRouter.delete('/:id', (request, response, next) => {
+//   Note.findByIdAndRemove(request.params.id)
+//     .then( () => {
+//       response.status(204).end()
+//     })
+//     .catch(error => next(error))
+// })
 
 notesRouter.post('/', async (request, response, next) => {
   const body = request.body
