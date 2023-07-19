@@ -1,5 +1,6 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/note')
+const User = require('../models/user')
 
 
 notesRouter.get('/', async (request, response) => {
@@ -60,10 +61,15 @@ notesRouter.delete('/:id', async (request, response, next) => {
 
 notesRouter.post('/', async (request, response, next) => {
   const body = request.body
+  // look up user
+  const user = await User.findById(body.userId)
+
+  console.log('response body', request.body)
   // use Note constructor function:
   const note = new Note ({
     content: body.content,
     important: body.important || false,
+    user: user.id
   })
   // save note and the savedNote is the newly created note
   // using promises (delete async):
@@ -76,7 +82,12 @@ notesRouter.post('/', async (request, response, next) => {
   // using async/await
   try {
     const savedNote = await note.save()
+    // note how user object also changed as we save the note id to the notes field
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
+
     response.status(201).json(savedNote)
+
   } catch(exception) {
     next(exception)
   }
