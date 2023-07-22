@@ -6,7 +6,7 @@ const User = require('../models/user')
 const getTokenFrom = request => {
   const authorization = request.get('authorization')
 
-  if (authorization && authorization.starstWith('Bearer ')) {
+  if (authorization && authorization.startsWith('Bearer ')) {
     return authorization.replace('Bearer ', '')
   }
   return null
@@ -69,6 +69,7 @@ notesRouter.delete('/:id', async (request, response, next) => {
 // })
 
 notesRouter.post('/', async (request, response, next) => {
+
   const body = request.body
   // getTokenFrom helper function gets token from authorization header
   const decodedToken = jwt.verify(getTokenFrom(request), process.env.SECRET)
