@@ -13,6 +13,7 @@ const unknownEndPoint = (request, response) => {
 }
 
 const errorHandler = (error, request, response, next) => {
+  logger.info('HELLO FROM ERROR HANDLER MIDDLEWARE')
   logger.error(error.message)
 
   if (error.name === 'CastError') {
