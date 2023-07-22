@@ -33,6 +33,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndPoint)
+// error handler must be last middleware
 app.use(middleware.errorHandler)
 
 
