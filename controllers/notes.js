@@ -79,7 +79,7 @@ notesRouter.post('/', async (request, response, next) => {
   // look up user
   const user = await User.findById(decodedToken.id)
 
-  console.log('response body', request.body)
+
   // use Note constructor function:
   const note = new Note ({
     content: body.content,
