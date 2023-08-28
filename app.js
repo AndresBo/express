@@ -9,7 +9,6 @@ const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
 
-
 mongoose.set('strictQuery', false)
 
 logger.info('connecting to ', config.MONGODB_URI)
@@ -33,7 +32,7 @@ app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
 // only add test end point to the application if running in test mode:
-if (process.end.NODE_ENV === 'test') {
+if (process.env.NODE_ENV === 'test') {
   const testingRouter = require('./controllers/testing')
   app.use('/api/testing', testingRouter)
 }
