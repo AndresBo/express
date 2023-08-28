@@ -32,6 +32,12 @@ app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/login', loginRouter)
 
+// only add test end point to the application if running in test mode:
+if (process.end.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 app.use(middleware.unknownEndPoint)
 // error handler must be last middleware
 app.use(middleware.errorHandler)
